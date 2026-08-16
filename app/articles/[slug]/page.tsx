@@ -8,6 +8,7 @@ import AccessLevelBadge from '@/components/AccessLevelBadge'
 import VideoEmbed from '@/components/VideoEmbed'
 import UpgradeCTA from '@/components/UpgradeCTA'
 import AuthorCard from '@/components/AuthorCard'
+import Markdown from '@/components/Markdown'
 
 export const dynamic = 'force-dynamic'
 
@@ -120,10 +121,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </div>
             )}
             {article.metadata?.body ? (
-              <div
-                className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:text-ink prose-p:text-ink-light prose-a:text-accent"
-                dangerouslySetInnerHTML={{ __html: article.metadata.body }}
-              />
+              <Markdown content={article.metadata.body} />
             ) : !isVideo ? (
               <p className="text-ink-light">Full content coming soon.</p>
             ) : null}
