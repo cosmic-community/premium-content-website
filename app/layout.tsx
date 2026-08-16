@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import CosmicBadge from '@/components/CosmicBadge'
+import CheckoutStatus from '@/components/CheckoutStatus'
 
 export const metadata: Metadata = {
   title: 'Lumen — Premium Content Website',
@@ -40,6 +42,9 @@ export default function RootLayout({
       <body className="bg-paper text-ink font-sans antialiased">
         <div className="flex min-h-screen flex-col">
           <Header />
+          <Suspense fallback={null}>
+            <CheckoutStatus />
+          </Suspense>
           <main className="flex-1">{children}</main>
           <Footer />
         </div>
