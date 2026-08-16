@@ -2,13 +2,14 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getArticleBySlug, getMetafieldValue } from '@/lib/cosmic'
+import { hasPremiumAccess } from '@/lib/access'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
 import AccessLevelBadge from '@/components/AccessLevelBadge'
 import VideoEmbed from '@/components/VideoEmbed'
 import UpgradeCTA from '@/components/UpgradeCTA'
 import AuthorCard from '@/components/AuthorCard'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 interface ArticlePageProps {
   params: Promise<{ slug: string }>
@@ -26,6 +27,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const contentType = getMetafieldValue(article.metadata?.content_type)
   const isPremium = accessLevel === 'Premium'
   const isVideo = contentType === 'Video'
+
+  const unlocked = isPremium ? await hasPremiumAccess() : true
+  const locked = isPremium && !unlocked
 
   const author = article.metadata?.author
   const featuredImage = article.metadata?.featured_image
@@ -106,8 +110,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       )}
 
       <div className="mt-10">
-        {isPremium ? (
-          <UpgradeCTA />
+        {locked ? (
+          <UpgradeCTA returnPath={`/articles/${slug}`} />
         ) : (
           <>
             {isVideo && videoUrl && (
